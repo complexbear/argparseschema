@@ -37,6 +37,7 @@ def parser_to_schema(parser, name):
                 required=arg.required,
                 default=arg.default,
                 missing=arg.default,
+                description=arg.help,
                 validator=lambda val: type(val) == arg.type
             )
             attrs[arg.dest] = type_to_field(arg.type)(**field_args)
