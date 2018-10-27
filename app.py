@@ -8,6 +8,7 @@ from argparseschema import parser_to_schema
 
 def main():
     app = Flask('MySchemaApp')
+    docs = FlaskApiSpec(app)
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-x', dest='xvalue', type=str, help='the x value', default='hello')
@@ -16,6 +17,8 @@ def main():
     MySchema = parser_to_schema(parser, 'MySchema')
     my_schema = MySchema()
 
+    
+    @docs.register
     @app.route('/api')
     @use_kwargs(MySchema, locations=['query'])
     def handler(**kwargs):
@@ -24,8 +27,6 @@ def main():
         print('recv obj: {}'.format(obj))
         return my_schema.dump(obj)
 
-    docs = FlaskApiSpec(app)
-    docs.register(handler)
     return app
 
 if __name__ == '__main__':
